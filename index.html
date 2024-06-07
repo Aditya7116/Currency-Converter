@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Currency Converter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="converter-container">
+    <h1>Currency Converter</h1>
+    <label for="from">From:</label>
+    <select id="from">
+      <option value="USD">USD</option>
+      <option value="EUR">EUR</option>
+      <option value="AED">AED</option>
+      <option value="AUD">AUD</option>
+      <option value="RUB">RUB</option>
+      <option value="PKR">PKR</option>
+      <option value="QAR">QAR</option>
+      <option value="INR">INR</option>
+    </select>
+    
+    <label for="to">To:</label>
+    <select id="to">
+      <option value="USD">USD</option>
+      <option value="EUR">EUR</option>
+      <option value="AED">AED</option>
+      <option value="AUD">AUD</option>
+      <option value="RUB">RUB</option>
+      <option value="PKR">PKR</option>
+      <option value="QAR">QAR</option>
+      <option value="INR">INR</option>
+    </select>
+    
+    <label for="amount">Amount:</label>
+    <input type="text" id="amount" placeholder="Enter amount" />
+    
+    <button onclick="Convert()">Convert</button>
+    
+    <h3 id="Result"></h3>
+  </div>
+
+  <footer>
+    <p>&copy; 2024 Aditya Vibhute</p>
+  </footer>
+
+  <script>
+    function Convert() {
+      let from = document.getElementById("from").value;
+      let to = document.getElementById("to").value;
+      let amount = parseFloat(document.getElementById("amount").value);
+
+      if (isNaN(amount)) {
+        document.getElementById("Result").innerHTML = "Please enter a valid amount.";
+        return;
+      }
+
+      fetch(`https://v6.exchangerate-api.com/v6/137bb4385644db41b12a3f2d/latest/${from}`)
+        .then(resp => resp.json())
+        .then(data => {
+          let rates = data.conversion_rates;
+          let ConvertRate = rates[to];
+          let result = amount * ConvertRate;
+          document.getElementById("Result").innerHTML = `Converted amount in ${to} is ${result.toFixed(2)}`;
+        })
+        .catch(() => {
+          document.getElementById("Result").innerHTML = "Error retrieving data. Please try again.";
+        });
+    }
+  </script>
+</body>
+</html>
